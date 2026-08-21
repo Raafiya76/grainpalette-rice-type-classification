@@ -41,3 +41,5 @@ Data/
 # Keep the trained model tracked for deployment
 !models/
 !models/rice.h5
+
+.vercel
