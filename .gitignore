@@ -37,3 +37,7 @@ Thumbs.db
 
 # Large training dataset (keep it out of git; document how to fetch it instead)
 Data/
+
+# Keep the trained model tracked for deployment
+!models/
+!models/rice.h5

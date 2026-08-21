@@ -10,6 +10,7 @@ Run in production (used by the Procfile on Render):
 import logging
 import os
 from datetime import datetime
+from pathlib import Path
 
 import numpy as np
 from flask import Flask, render_template, request
@@ -18,21 +19,25 @@ from werkzeug.utils import secure_filename
 # --------------------------------------------------------------------------
 # Configuration
 # --------------------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.environ.get("MODEL_PATH", os.path.join(BASE_DIR, "models", "rice.h5"))
-UPLOAD_DIR = os.path.join(BASE_DIR, "static", "uploads")
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = Path(os.environ.get("MODEL_PATH", str(BASE_DIR / "models" / "rice.h5"))).expanduser().resolve()
+UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 CLASS_NAMES = ["arborio", "basmati", "ipsala", "jasmine", "karacadag"]
 IMG_SIZE = (224, 224)
 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("grainpalette")
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder=str(BASE_DIR / "templates"),
+    static_folder=str(BASE_DIR / "static"),
+)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB upload cap
-app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 # --------------------------------------------------------------------------
 # Model loading (lazy + defensive, so the app can start and serve pages
@@ -52,13 +57,14 @@ def get_model():
     try:
         import tensorflow as tf
 
-        if not os.path.exists(MODEL_PATH):
+        model_path = str(MODEL_PATH)
+        if not os.path.exists(model_path):
             raise FileNotFoundError(
-                f"Model file not found at '{MODEL_PATH}'. "
+                f"Model file not found at '{model_path}'. "
                 "Train it with train_model.py or place rice.h5 in the models/ folder."
             )
-        _model = tf.keras.models.load_model(MODEL_PATH)
-        logger.info("Model loaded successfully from %s", MODEL_PATH)
+        _model = tf.keras.models.load_model(model_path)
+        logger.info("Model loaded successfully from %s", model_path)
     except Exception as exc:  # noqa: BLE001 - we want to surface any load error
         _model_load_error = str(exc)
         logger.error("Could not load model: %s", exc)
@@ -134,11 +140,11 @@ def predict():
 
     filename = secure_filename(file.filename)
     stamped_name = f"{datetime.utcnow():%Y%m%d%H%M%S}_{filename}"
-    filepath = os.path.join(UPLOAD_DIR, stamped_name)
-    file.save(filepath)
+    filepath = UPLOAD_DIR / stamped_name
+    file.save(str(filepath))
 
     try:
-        batch = preprocess_image(filepath)
+        batch = preprocess_image(str(filepath))
         preds = model.predict(batch)
         prediction = CLASS_NAMES[int(np.argmax(preds))]
         confidence = float(np.max(preds)) * 100
@@ -148,7 +154,7 @@ def predict():
     finally:
         # Uploaded images are only needed for the single prediction.
         try:
-            os.remove(filepath)
+            filepath.unlink(missing_ok=True)
         except OSError:
             pass
 
@@ -169,5 +175,5 @@ def server_error(_e):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    debug = os.environ.get("FLASK_DEBUG", "true").lower() == "true"
+    debug = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
     app.run(host="0.0.0.0", port=port, debug=debug)
