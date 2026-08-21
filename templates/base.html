@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{% block title %}GrainPalette – Rice Type Detection{% endblock %}</title>
+  <meta content="Classify rice grain types with a deep learning model." name="description">
+
+  <!-- Favicon (local asset, no hotlinking) -->
+  <link href="{{ url_for('static', filename='img/paddy.jpg') }}" rel="icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Bootstrap CSS (grid, utilities used throughout the templates) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Icon fonts used by the templates (bi bi-*, bx bx-*) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <!-- AOS scroll animations (data-aos attributes) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+  <!-- Swiper (testimonials slider) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Site CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <div class="wrap">
+
+    {% block hero %}{% endblock %}
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="d-flex align-items-center">
+      <div class="container d-flex align-items-center justify-content-between">
+        <div class="logo">
+          <h1 class="text-light"><a href="{{ url_for('home') }}"><span>Rice Type Classification</span></a></h1>
+        </div>
+
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto {{ 'active' if request.path == url_for('home') }}" href="{{ url_for('home') }}">Home</a></li>
+            <li><a class="nav-link scrollto" href="{{ url_for('home') }}#about">About</a></li>
+            <li><a class="nav-link scrollto" href="{{ url_for('home') }}#testimonials">Testimonials</a></li>
+            <li><a class="nav-link scrollto {{ 'active' if request.path == url_for('contact') }}" href="{{ url_for('contact') }}">Contact</a></li>
+            <li><a class="nav-link scrollto {{ 'active' if request.path == url_for('details') }}" href="{{ url_for('details') }}">Predict</a></li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav>
+      </div>
+    </header><!-- End Header -->
+
+    <main id="main">
+      {% block content %}{% endblock %}
+    </main><!-- End #main -->
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+      <div class="footer-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-3 col-md-6 footer-contact">
+              <h3>GrainPalette</h3>
+              <p>
+                A deep learning powered rice grain classifier.<br>
+                <strong>Email:</strong> shaikraafiya3866@gmail.com<br>
+              </p>
+            </div>
+
+            <div class="col-lg-3 col-md-6 footer-links">
+              <h4>Useful Links</h4>
+              <ul>
+                <li><i class="bx bx-chevron-right"></i> <a href="{{ url_for('home') }}">Home</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="{{ url_for('home') }}#about">About</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="{{ url_for('details') }}">Predict</a></li>
+                <li><i class="bx bx-chevron-right"></i> <a href="{{ url_for('contact') }}">Contact</a></li>
+              </ul>
+            </div>
+
+            <div class="col-lg-3 col-md-6 footer-links">
+              <h4>Rice Types</h4>
+              <ul>
+                <li><i class="bx bx-chevron-right"></i> Arborio</li>
+                <li><i class="bx bx-chevron-right"></i> Basmati</li>
+                <li><i class="bx bx-chevron-right"></i> Ipsala</li>
+                <li><i class="bx bx-chevron-right"></i> Jasmine</li>
+                <li><i class="bx bx-chevron-right"></i> Karacadag</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container py-4">
+        <div class="copyright">
+          &copy; Copyright <strong><span>GrainPalette</span></strong>. All Rights Reserved
+        </div>
+      </div>
+    </footer><!-- End Footer -->
+
+  </div>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS (CDN, since /static/vendor was referenced but never included) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.1.4/swiper-bundle.min.js"></script>
+
+  <!-- Site JS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  {% block scripts %}{% endblock %}
+</body>
+
+</html>

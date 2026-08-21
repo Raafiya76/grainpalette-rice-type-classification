@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Image – Rice Type Detection{% endblock %}
+
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+<section class="breadcrumbs">
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+      <h1>Details Page</h1>
+      <ol>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li>Details Page</li>
+      </ol>
+    </div>
+  </div>
+</section><!-- End Breadcrumbs -->
+
+<section class="inner-page">
+  <div class="container">
+    <div class="row gy-4 justify-content-center">
+      <div class="col-lg-6 text-center">
+        <div class="upload-form">
+          <div class="upload-form-header">
+            <h2>Upload Your Image</h2>
+          </div>
+          <div class="upload-form-body">
+            <form id="form" action="{{ url_for('predict') }}" method="post" enctype="multipart/form-data">
+              <div class="form-group mb-3">
+                <label for="image">Choose Image:</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage();" required>
+              </div>
+              <div class="form-group mb-3">
+                <img id="preview" src="" alt="Image Preview" style="display:none; max-width:100%;">
+              </div>
+              <button type="submit" class="cta-btn">Upload</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function previewImage() {
+    const input = document.getElementById('image');
+    const preview = document.getElementById('preview');
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.style.display = 'none';
+    }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables / secrets
+.env
+.flaskenv
+
+# Flask
+instance/
+.webassets-cache
+
+# Runtime uploads (user-submitted images, not source)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Large training dataset (keep it out of git; document how to fetch it instead)
+Data/

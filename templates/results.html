@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Results – Rice Type Detection{% endblock %}
+
+{% block content %}
+<section class="inner-page">
+  <div class="container position-relative">
+    <div class="row d-flex justify-content-center">
+      <div class="col-lg-6 text-center">
+        <h2>Results</h2>
+        <p>Based on the image you provided, the model predicts your rice is of type:</p>
+        <p><strong style="font-size: 1.5rem; text-transform: capitalize;">{{ prediction_text }}</strong></p>
+        {% if confidence %}
+        <p>Confidence: {{ confidence }}%</p>
+        {% endif %}
+        <form action="{{ url_for('details') }}" method="get">
+          <button type="submit" class="cta-btn">Try Another Image</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
